@@ -1,0 +1,22 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Toolchain
+        run: swift --version
+      - name: Test
+        run: swift test
+      - name: Build app (Apple Silicon + Intel)
+        run: UNIVERSAL=1 scripts/build-app.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: XMBridge
+          path: build/XMBridge.zip
